@@ -25,8 +25,11 @@ beyond the network activity.
 ## Spin up and configuration
 [Google Cloud Platform](https://console.cloud.google.com/compute/instances?project=user0112358d&instancessize=50)
 
-### instance-1
+### instance-1 config
+https://ssh.cloud.google.com/projects/user0112358d/zones/us-east4-c/instances/instance-1?authuser=0&hl=en_US&projectNumber=14472881749
+
 Compute Engine VM instance
+Debian
 
 ```
 sudo apt-get updat
@@ -103,10 +106,89 @@ https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 ref: Description of the Internet Protocol, IP
 https://www.eit.lth.se/ppplab/IPHeader.htm
 
+ref: pcaptools
+https://github.com/caesar0301/awesome-pcaptools
+
+"The basic operation of tcpreplay is to resend all packets from the input file(s) at the speed at which they were recorded, or a specified data rate, up to as fast as the hardware is capable."
+http://tcpreplay.appneta.com/wiki/tcpreplay-man.html
+AppNeta
+
+```-K, --preload-pcap```
+"This option loads the specified pcap(s) into RAM before starting to send in order to improve replay performance while introducing a startup performance hit."
+
+```-l number, --loop=number```
+
+```--pktlen```
+"By specifying this option, tcpreplay will ignore the snaplen field and instead try to send packets based on the original packet length. Bad things may happen"
+
+
+```--netmap```
+"will detect netmap capable network drivers on Linux and BSD systems. If detected, the network driver is bypassed for the execution duration, and network buffers will be written to directly. This will allow you to achieve full line rates on commodity network adapters, similar to rates achieved by commercial"
+
+On instance-1 SSH 3
+```
+top
+```
+For CPU and memory usage
+
+```
+cat /proc/cpuinfo
+cat /proc/meminfo
+```
+https://alvinalexander.com/linux-unix/linux-processor-cpu-memory-information-commands/
+
+free -m
+
+smallFlows.pcap
+https://tcpreplay.appneta.com/wiki/captures.html
+
+ip link list
+see mtu setting if getting errors packet to larger on tcpreplay
+
+sudo ip link set eth0 mtu 1600
+change the mtu setting
+
+default was
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1460
+
+## Packet capture
+### Use tcpdump to listen to tcpreplay
+#### Session 1
+Filtering to a host.
+```
+sudo tcpdump -i eth0 -nn -v host 192.168.3.131
 ```
 
+#### Session 2
+Replay a PCAP at speed captured.
+```
+sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
+```
+
+I know 192.168.3.131 exists in smallFlows because:
+```
+sudo tcpdump -v -r smallFlows.pcap > smallFlows.txt
+less smallFlows.txt
+```
+
+So now, replay CICIDS2017 PCAP
+and have tcpdump pipe to kafka publisher.
+
+Monitor ```top``` on instance-1, or better yet,
+publish key system metrics to a system Kafka topic publisher.
+What is the load of replaying the PCAP at speed,
+plus Kafka server?
+
+
+```
 # For testing packets captured like:
-# sudo tcpdump -i eth0 -nn -c 5 -vvv > tmp.txt
+# record traffic
+# on 1 ssh 1: sudo tcpdump -i eth0 -nn -c 5 -vvvv > tmp.txt
+#
+# on 1 ssh 2:
+# sudo tcpreplay -i eth0 -K --loop 1 messenger.pcap # this hangs
+# sudo tcpreplay -i eth0 -tK --loop 1 messenger.pcap
+# sudo tcpreplay -i eth0 -tK --loop 3 smallFlows.pcap
 
 with open('tmp.txt', 'r') as f:
     pcap = f.read()
@@ -136,7 +218,7 @@ class Packet(object):
     def __init__(self, fields):
         pass
 
-need to install pip3 on isntance-1 #here
+need to install pip3 on instance-1 #here
 
 time = time_pat.search(packet).group(1)
 src = source_pat.search(pcap[0]).group(1)
