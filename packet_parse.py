@@ -3,6 +3,7 @@
 # on 1.0: sudo tcpdump -i eth0 -nn -c 5 -vvvv > tmp.txt
 #
 # on 1:1: sudo tcpreplay -i eth0 -K --loop 1 messenger.pcap
+import json
 
 with open('tmp.txt', 'r') as f:
     pcap = f.read()
