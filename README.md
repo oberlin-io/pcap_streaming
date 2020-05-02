@@ -229,6 +229,45 @@ session 2 > sudo tshark -l > tsharkpipe
 ```
 
 ## Consume Kafka topics from instance 1
+First, attempt to publish and consume PCAP in Kafka from one instance.
+
+#here
+Make a PCAP topic.
+```
+~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic instance-1-pcap
+```
+
+Is netcat needed? Why not tcpdump piped to Kafka producer?
+
+Connection 1: Listen on port with netcat and pipe to Kafka producer.
+```
+nc -l -p 8888 | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic instance-1-pcap > /dev/null
+```
+
+Connection 2: Sniff network traffic and pipe to port vi netcat.
+```
+sudo tcpdump -i eth0 -nn -v | nc localhost -p 8888
+```
+
+Connection 3: Replay the network traffic
+```
+sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
+```
+
+Connection 4: Consume Kafka topic.
+```
+~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic instance-1-pcap --from-beginning
+```
+
+Make the instance 1 server publicly accessible
+and restrict access to a trusted list of source IP addresses using firewall rules.
+port 9092 open as TCP connection from any IP 0.0.0.0/0.
+Not secure. Better to restrict to a static [?] IP, but the default
+GCP IP is dynamic [?]. Thus, keeping the port open to any IP
+for demonstration purposes.
+It is advised to setup a shared VPC network.
+https://cloud.google.com/vpc/docs/shared-vpc
+
 
 ## Packet analytics
 The Storm cluster on HDFS consumes the Kafka PCAP topic
