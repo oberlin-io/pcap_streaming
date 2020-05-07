@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 -->
 # Streaming network packet processing DRAFTING
 
@@ -22,6 +22,24 @@ Data used is CICIDS2017 PCAP
 ## Architecture
 ![Streaming packet data processing architecture.](img/architecture.png)
 
+## Data source
+Simulate TCP traffic by Replaying
+
+Data source notes
+[
+  {
+    "file": "Monday-WorkingHours.pcap",
+    "url": "http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/PCAPs/Monday-WorkingHours.pcap",
+    "GB": "10"
+  },
+  {
+    "file": "Wednesday-WorkingHours.pcap",
+    "url": "http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/PCAPs/Wednesday-WorkingHours.pcap",
+    "GB": "12"
+
+  }
+]
+
 ## Instance 1 setup
 Instance 1 simulates the packet capture on the network switch.
 
@@ -29,8 +47,33 @@ Instance 1 simulates the packet capture on the network switch.
 (GCP)
 - Name: instance-1
 - Operating system: Debian
-- vCPU: 1
+- vCPU: 1 [Consider bumping this up, as tcpreplay maxing]
 - Memory: 3.75 GB
+- Disk 30GB [#check]
+
+### Resize disk
+Will need at least 25GB with two PCAP files, one benign other DDoS.
+ref: https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions
+
+On instance disk page > edit > GB
+
+check disks with
+```
+sudo df -h
+sudo lsblk
+```
+
+edit storage from broser gc console
+
+Make sure growpart from cloud-guest-utils installed
+sudo apt -y install cloud-guest-utils
+
+resize with device ID and partition number.
+sudo growpart /dev/sda 1
+
+Extend the file system on the disk or partition to use the added space
+sudo resize2fs /dev/sda1
+
 
 ### Install tcpdump, tcpreplay, and Java JDK
 Java is required for Kafka.
@@ -195,7 +238,7 @@ sudo tcpdump -v -r smallFlows.pcap > smallFlows.txt
 less smallFlows.txt
 ```
 
-If tcpreplay is throwing errors that packets are too large,
+If tcpreplay is throwing, and it will for isntance-a, errors that packets are too large,
 increase the MTU setting.
 "the maximum transmission unit (MTU) is the size of the largest
 protocol data unit (PDU) that can be communicated in a
@@ -241,22 +284,24 @@ Is netcat needed? Why not tcpdump piped to Kafka producer?
 
 Connection 1: Listen on port with netcat and pipe to Kafka producer.
 ```
-nc -l -p 8888 | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic instance-1-pcap > /dev/null
+netcat -l -p 4444 | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic instance-1-pcap > /dev/null
 ```
 
 Connection 2: Sniff network traffic and pipe to port vi netcat.
 ```
-sudo tcpdump -i eth0 -nn -v | nc localhost -p 8888
+sudo tcpdump -i eth0 -nn -v | netcat localhost 4444
 ```
 
 Connection 3: Replay the network traffic
 ```
-sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
+sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap #here
 ```
 
 Connection 4: Consume Kafka topic.
 ```
 ~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic instance-1-pcap --from-beginning
+
+~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic instance-1-pcap
 ```
 
 Make the instance 1 server publicly accessible
@@ -268,14 +313,130 @@ for demonstration purposes.
 It is advised to setup a shared VPC network.
 https://cloud.google.com/vpc/docs/shared-vpc
 
+Compute power may have to be increased on instance-1, as tcpreplay maxes out
+the CPU (97%) even while repalying smallFlows.pcap (9444731B)
+versus Monday-WorkingHours.pcap (10822507416B)
+and Wednesday-WorkingHours.pcap (3420789612B)
+
+Might assumed that not all packets are getting played or packets are delayed, buffered [?]
+
+Or consider this instead, if Kafka in the way.
+
+instance-1, session 1
+```
+sudo tcpdump -i eth0 -nn -vvvv | netcat [cluster-1-m's internal IP*] 4444
+```
+\*Was 10.128.0.4
+
+instance-1, session 2
+```
+sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
+```
+
+Can listen on cluster-1-m and see the PCAP (optional)
+```
+netcat -l -p 4444
+```
+Or write it to a file
+```
+netcat -l -p 4444 > tmp.txt
+```
+
+#here 2020-05-07
+Have Spark consume stream with the normal socket receiver.
+Skipping Kafka for now.
+
+First thing to do is concat every second line,
+but check the tcpdumps -v mode level etc
+Also review tcpreplay's settings. Is it replaying
+everythin possible?
+Which also reminds me, tcpreplay needs better CPU.
+
 
 ## Packet analytics
-The Storm cluster on HDFS consumes the Kafka PCAP topic
+The Storm or Spark cluster consumes the Kafka PCAP topic
 in order to parse, filter, reduce, analyze, and model packet capture.
 <!-- Python's Scapy [?]
 Or consider Spark Streaming socket input for RDD, instead of Storm
 read up on Storm rolling window
 -->
+
+Create cluster for Spark. Master and two workers:
+- cluster-1-m
+- cluster-1-w-0
+- cluster-1-w-1
+
+Create a cluster for Spark with Dataproc
+
+https://console.cloud.google.com/dataproc/clusters?project=user0112358d
+
+Cloud Dataproc API has been enabled
+
+APIs Explorer Quickstart—Create a cluster
+"clusterName": "cluster-1",
+"clusterUuid": "b8ae0245-a98b-4b04-a388-2ab51a503b16",
+
+1 master node, two workers
+
+Worker nodes
+Each contains a YARN NodeManager and a HDFS DataNode.
+
+see https://www.quora.com/What-is-the-best-hardware-configuration-to-run-Hadoop
+
+
+Configure master
+```
+sudo apt-get install python3-pip
+pip3 install pyspark
+```
+
+https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#quick-example
+
+```
+/home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit test_spark.py localhost 6969
+```
+
+Run Spark code like this:
+```
+/home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 test.py
+```
+
+Spark code must include first off:
+```
+import os
+x = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 pyspark-shell'
+os.environ['PYSPARK_SUBMIT_ARGS'] = x
+
+
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+from pyspark.streaming.kafka import KafkaUtils
+
+# Set up the Spark context and the streaming context
+sc = SparkContext(appName="PCAP test")
+sc.setLogLevel("WARN")
+
+ssc = StreamingContext(sc, .01)
+
+kafkaStream = KafkaUtils.createStream(ssc,
+        '10.150.0.6:9092',
+        'spark-streaming',
+        {'instance-1-pcap':1})
+
+kafkaStream.pprint()
+#import re
+#parsed = kafkaStream.map(lambda line: re.compile())
+
+ssc.start()
+sleep(5)
+ssc.stop(stopSparkContext=True, stopGraceFully=True)
+```
+
+
+### to do: #here
+- Get kafka connector to pyspark streaming df
+- Do a transformation
+- then run that pyspark file as a job in browser dataproc page
 
 Packet extract namespace:
 - number [?]
@@ -372,4 +533,71 @@ free -m
 Interface info.
 ```
 ip link show
+```
+
+## Pyspark client
+```
+from pyspark import SparkConf, SparkContext
+from pyspark.streaming import StreamingContext
+
+def datastream():
+    conf = SparkConf()
+    conf.setAppName('TwitterStreamApp')
+
+    sc = SparkContext(conf=conf)
+    sc.setLogLevel('ERROR')
+
+    ssc = StreamingContext(sc, 2) # interval size 2 seconds
+
+    # setting a checkpoint to allow RDD recovery [?]
+    ssc.checkpoint('checkpoint_TwitterApp')
+
+    # read data from port 9009
+    datastream = ssc.socketTextStream('localhost', 9009)
+
+    return datastream
+```
+
+## Wrapping the traffic simulator and Kafka pub/sub
+Saves from opening 4-5 sessions to instance-1.
+Code to run the traffic simulator and sniffer. Maybe separate these out,
+as they're different concepts.
+
+Not tested
+
+```
+import subprocess
+import threading
+netcat_port = 8888
+kafka_port = 9092
+pcap_file = 'smallFlows.pcap'
+def netcat_to_kafka(netcat_port, kafka_port):
+    '''
+    Pipe netcat to Kafka producer
+    '''
+    cmd = 'netcat -l -p {} | ~/kafka/bin/kafka-console-producer.sh \
+--broker-list localhost:{} \
+--topic instance-1-pcap > /dev/null'.format(netcat_port, kafka_port)
+    subprocess.run(cmd)
+
+def tcpdump_to_netcat(netcat_port):
+    '''
+    Sniff traffic on interface and pipe to netcat
+    '''
+
+    cmd = 'sudo tcpdump -i eth0 -nn -vvvv | \
+netcat localhost -p {}'.format(netcat_port)
+
+    subprocess.run(cmd)
+
+
+def tcpreplay(pcap_file):
+    '''
+    Simulate network traffic on the interface with tcpreplay
+    '''
+
+    cmd = 'sudo tcpreplay -i eth0 -K --loop 1 {}'.format(pcap_file)
+
+    subprocess.run(cmd)
+
 ```
