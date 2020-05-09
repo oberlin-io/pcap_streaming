@@ -76,11 +76,8 @@ however it is not implemented in the current project version.
 
 ![tcpreplay CPU usage on one core](reference/tcpreplay_cpu_usage.png)
 **Figure 3**
-The left session running the "top" command shows the CPU usage of tcpreplay.
-It is undetermined what results from tcprepaly maxing out the CPU,
-such as dropped or delayed packets.  
 
-#### Resize the disk
+#### Resize disk
 Storing the two CICDataset PCAP files requires at least 25GB available.
 The disk must be resized and filesystem extended (Resizing the file system, Google Cloud).
 
@@ -184,49 +181,11 @@ Such a topic might include timestamped CPU and memory usage stats via a tool lik
 ~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic instance-1-heartbeat
 ```
 
-This Python script [kafka_heartbeat.py](reference/kafka_heartbeat.py)
-is a wrapper arround the Kafka publish command that sends a stats message every N seconds. (Firgure 4)
+This Python script [instance_1_heartbeat.py](reference/kafka_wrap.p)
+is a wrapper arround the Kafka publish command that sends a stats message every N seconds. (Firgure N)
 
-![kafka_heartbeat](reference/kafka_heartbeat.png)
-**Figure 4**
-
-### Running the traffic simulation, capture, and serving
-It was foud that, to use Kafka, tcpdump is piped to netcat, which pipes to the Kafka producer script for the topic.
-For example, after making a topic "instance-1-pcap", in an instance-1 session,
-sniff network traffic with tcpdump and pipe to port 4444 with netcat.
-```
-sudo tcpdump -i eth0 -nn -v | netcat localhost 4444
-```
-
-In another session, listen on port 4444 with netcat and pipe lines to Kafka.
-```
-netcat -l -p 4444 | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic instance-1-pcap > /dev/null
-```
-
-Hoever, due to errors when trying to consume the Kakfa topic from the Spark cluster,
-and a lack of time for troubleshooting, this project opts to use only netcat to serve the data,
-for illustrative purpose.
-
-Along with the tcpdump and netcat commands above, tcpreplay is ran on a third session:
-```
-sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
-```
-
-The three commands are wrapped in [server_threads.py](reference/server_threads.py),
-which also includes the configuration of the isntance's maximum transmission unit.
-The MTU is the size of the largest protocol data unit that is allowed to be transmitted.
-One can check the data flow on another session with the following.
-Note, this command must run after running server_threads.py, specifically after ```netcat -lk -p 4444```.
-```
-netcat localhost 4444
-```
-
-![server_threads.png](reference/server_threads.png)
-**Figure 5**
-Session 1 (left) runs serve_threads.py, which consists of tcpreplay, tcpdump, and netcat.
-Session 2 listens with netcat and shows the streaming packet capture.
-This same stream will be consumed by the Spark cluster.
-
+![](reference/kafka_heartbeat.png)
+**Figure N**
 
 ## Spark cluster
 <!-- ----------------------------- -->
