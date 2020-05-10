@@ -16,7 +16,7 @@ def tcpdump_to_netcat(host_port=4444):
     '''
     Sniff traffic on interface and pipe to netcat
     '''
-    cmd = 'sudo tcpdump -i eth0 -nn -vvvv '
+    cmd = 'sudo tcpdump -i eth0 -nn --dont-verify-checksums '
     cmd += '|netcat -lk -p {}'.format(host_port)
     subprocess.run(cmd, shell=True)
 

@@ -207,7 +207,7 @@ It was foud that, to use Kafka, tcpdump is piped to netcat, which pipes to the K
 For example, after making a topic "instance-1-pcap", in an instance-1 session,
 sniff network traffic with tcpdump and pipe to port 4444 with netcat.
 ```
-sudo tcpdump -i eth0 -nn -v | netcat localhost 4444
+sudo tcpdump -i eth0 -nn --dont-verify-checksums | netcat localhost 4444
 ```
 
 Here, switch ```-i``` to point tcpdump to the ethernet interface ```eth0```
