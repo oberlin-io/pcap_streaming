@@ -1,0 +1,774 @@
+11:09:51.953869 IP (tos 0x0, ttl 64, id 10100, offset 0, flags [DF], proto TCP (6), length 60)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.953869
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 60
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [S], cksum 0x409a (incorrect -> 0xd17a), seq 3268475063, win 28400, options [mss 1420,sackOK,TS val 137978341 ecr 0,nop,wscale 7], length 0
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : S
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.966767 IP (tos 0x0, ttl 54, id 61353, offset 0, flags [none], proto TCP (6), length 60)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.966767
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 60
+
+    93.184.216.34.80 > 10.142.0.3.41306: Flags [S.], cksum 0xf0e7 (correct), seq 1109334316, ack 3268475064, win 65535, options [mss 1460,sackOK,TS val 3683326065 ecr 137978341,nop,wscale 9], length 0
+
+source : 93.184.216.34.80
+destination : 10.142.0.3.41306
+time : 'NoneType' object has no attribute 'group'
+flags : S.
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.966804 IP (tos 0x0, ttl 64, id 10101, offset 0, flags [DF], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.966804
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [.], cksum 0x4092 (incorrect -> 0x1ed5), ack 1, win 222, options [nop,nop,TS val 137978344 ecr 3683326065], length 0
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : .
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.966998 IP (tos 0x0, ttl 64, id 10102, offset 0, flags [DF], proto TCP (6), length 192)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.966998
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 192
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [P.], cksum 0x411e (incorrect -> 0x09fa), seq 1:141, ack 1, win 222, options [nop,nop,TS val 137978344 ecr 3683326065], length 140: HTTP, length: 140
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : P.
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	GET / HTTP/1.1
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	User-Agent: Wget/1.18 (linux-gnu)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Accept: */*
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Accept-Encoding: identity
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Host: www.example.com
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Connection: Keep-Alive
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.979409 IP (tos 0x0, ttl 54, id 61356, offset 0, flags [none], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.979409
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    93.184.216.34.80 > 10.142.0.3.41306: Flags [.], cksum 0x1e98 (correct), ack 141, win 131, options [nop,nop,TS val 3683326077 ecr 137978344], length 0
+
+source : 93.184.216.34.80
+destination : 10.142.0.3.41306
+time : 'NoneType' object has no attribute 'group'
+flags : .
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.979803 IP (tos 0x0, ttl 54, id 61357, offset 0, flags [none], proto TCP (6), length 1643)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.979803
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 1643
+
+    93.184.216.34.80 > 10.142.0.3.41306: Flags [P.], cksum 0x46c9 (incorrect -> 0x9bbf), seq 1:1592, ack 141, win 131, options [nop,nop,TS val 3683326078 ecr 137978344], length 1591: HTTP, length: 1591
+
+source : 93.184.216.34.80
+destination : 10.142.0.3.41306
+time : 'NoneType' object has no attribute 'group'
+flags : P.
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	HTTP/1.1 200 OK
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Age: 324039
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Cache-Control: max-age=604800
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Content-Type: text/html; charset=UTF-8
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Date: Sat, 09 May 2020 11:09:51 GMT
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Etag: "3147526947+ident"
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Expires: Sat, 16 May 2020 11:09:51 GMT
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Last-Modified: Thu, 17 Oct 2019 07:18:26 GMT
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Server: ECS (dcb/7F83)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Vary: Accept-Encoding
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	X-Cache: HIT
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	Content-Length: 1256
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	<!doctype html>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	<html>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	<head>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <title>Example Domain</title>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <meta charset="utf-8" />
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <style type="text/css">
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    body {
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        background-color: #f0f0f2;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        margin: 0;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        padding: 0;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    }
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    div {
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        width: 600px;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        margin: 5em auto;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        padding: 2em;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        background-color: #fdfdff;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        border-radius: 0.5em;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    }
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    a:link, a:visited {
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        color: #38488f;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        text-decoration: none;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    }
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    @media (max-width: 700px) {
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        div {
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	            margin: 0 auto;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	            width: auto;
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	        }
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    }
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    </style>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	</head>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	<body>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	<div>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <h1>Example Domain</h1>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <p>This domain is for use in illustrative examples in documents. You may use this
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    domain in literature without prior coordination or asking for permission.</p>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	</div>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	</body>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+	</html>
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 'NoneType' object has no attribute 'group'
+flags : 'NoneType' object has no attribute 'group'
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.979828 IP (tos 0x0, ttl 64, id 10103, offset 0, flags [DF], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.979828
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [.], cksum 0x4092 (incorrect -> 0x17e8), ack 1592, win 247, options [nop,nop,TS val 137978348 ecr 3683326078], length 0
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : .
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.981115 IP (tos 0x0, ttl 64, id 10104, offset 0, flags [DF], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.981115
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [F.], cksum 0x4092 (incorrect -> 0x17e7), seq 141, ack 1592, win 247, options [nop,nop,TS val 137978348 ecr 3683326078], length 0
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : F.
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.993552 IP (tos 0x0, ttl 54, id 61360, offset 0, flags [none], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.993552
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    93.184.216.34.80 > 10.142.0.3.41306: Flags [F.], cksum 0x184c (correct), seq 1592, ack 142, win 131, options [nop,nop,TS val 3683326092 ecr 137978348], length 0
+
+source : 93.184.216.34.80
+destination : 10.142.0.3.41306
+time : 'NoneType' object has no attribute 'group'
+flags : F.
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+
+11:09:51.993575 IP (tos 0x0, ttl 64, id 10105, offset 0, flags [DF], proto TCP (6), length 52)
+
+source : 'NoneType' object has no attribute 'group'
+destination : 'NoneType' object has no attribute 'group'
+time : 11:09:51.993575
+flags : 'NoneType' object has no attribute 'group'
+protocol : 6
+length : 52
+
+    10.142.0.3.41306 > 93.184.216.34.80: Flags [.], cksum 0x4092 (incorrect -> 0x17d5), ack 1593, win 247, options [nop,nop,TS val 137978351 ecr 3683326092], length 0
+
+source : 10.142.0.3.41306
+destination : 93.184.216.34.80
+time : 'NoneType' object has no attribute 'group'
+flags : .
+protocol : 'NoneType' object has no attribute 'group'
+length : 'NoneType' object has no attribute 'group'
+

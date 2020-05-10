@@ -1,4 +1,13 @@
 # PCAP stream processing
+John Oberlin
+
+Submission for DATA 603 Platforms for Big Data Processing, University of Maryland Baltimore County
+
+In [this directory](./), one will find directories for the servers instance-1 and cluster-1-m,
+holding the essential programs to run the project, as well as an appendix directory
+that holds supplemental information, code, and visuals mentioned within this document.
+This document is written in Markdown and is best viewed in Chrome with the [Markdown Viewer](https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk)
+extension installed. Otherwise, see the PDF of the same name.
 
 ## Overview
 This project is a proof of concept of real-time parsing and storage of enterprise network traffic.
@@ -8,16 +17,17 @@ Exploring such technical infrastructure is important
 for real-time machine learning applications for detecting cyber exploits.
 However, PCAP is only one data source mong several streaming sources
 that can enrich cyber operations analyses.
+A full implementation would include data streams via Kafka topics from sources such as log files and help desk tickets.
 
-![Packet bytes per second](reference/flow_bytes_per_sec.png)
+![Packet bytes per second](appendix/flow_bytes_per_sec.png)
 **Figure 1**:
 *Packet bytes per second from an analysis of the CICDataset's Labelled Flows
 (Sharafaldin, Lashkari, and Ghorbani, 2018).
 The analysis calculated the average bytes per second of the full volume of the flow
 via the timestamp, flow duration, and flow bytes per second features in
-the flow-level traffic report. See Monday-WorkingHours.pcap_ISCX.csv in [data/](data/)
-sourced from GeneratedLabelledFlows.zip at
-[205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/](http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/).*
+the flow-level traffic report. See [Monday-WorkingHours.pcap_ISCX_sample.csv](appendix/Monday-WorkingHours.pcap_ISCX_sample.csv),
+which was downloaded from [205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/](http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/)
+(GeneratedLabelledFlows.zip).*
 
 The datasets used in this project are PCAP files of capture data of generated network activity.
 [The Intrusion Detection Evaluation Dataset](https://www.unb.ca/cic/datasets/ids-2017.html) (CICIDS2017)
@@ -25,8 +35,11 @@ is hosted by the University of New Brunswick: Canadian Institute for Cybersecuri
 The dataset consists of full packet payloads in pcap format,
 along with labeled network flows and extracted datasets for machine learning
 (sets of packet exchanges between hosts).
-However, for this particular project, the interest is in the original packet
-activity with the passage of time. Each file was downloaded to simulated switch server with the wget command.
+However, for this particular project, the interest is in the original raw packet
+activity within the passage of time.
+The set has a full week's worth of traffic. One day is labeled as benign,
+and other days include cyber attacks.
+Two of the files, a benign day and a DDoS attack day was downloaded to instance-1, the simulated switch server with the ```wget``` command.
 
 ```
 [{  "file": "Monday-WorkingHours.pcap",
@@ -39,21 +52,20 @@ activity with the passage of time. Each file was downloaded to simulated switch 
     "exploit": "DDoS attack"}]
 ```
 
-
 ## Architecture overview
 Without access to an enterprise network switch, this project simulates the traffic
 by replaying the CICDataset on a cloud server, which listens to the traffic
 and sends unstructured packet lines to a Spark cluster for processing.
 The master node then stores the lines transformed as key-value pairs (Figure 2).
 
-![Streaming packet data processing architecture.](reference/architecture.png)
+![Streaming packet data processing architecture.](appendix/architecture.png)
 **Figure 2**
 
 ## Network switch
 The simulated network switch, named instance-1, replays the PCAP files with the command line tool tcpreplay.
 "The basic operation of tcpreplay is to resend all packets from
 the input file(s) at the speed at which they were recorded,
-or a specified data rate, up to as fast as the hardware is capable" (tcpreplay man page).
+or a specified data rate, up to as fast as the hardware is capable" (tcpreplay man page, Debian).
 Another common networking tool, tcpdump captures the replayed packets.
 (Note that the tool also captures actual instance-1 SSH session traffic, which could be filtered out.)
 The standard output is piped to yet another networking tool, netcat.
@@ -74,7 +86,7 @@ however it is not implemented in the current project version.
 
 \*tcpreplay's CPU usage (97%) probably calls for increasing the number of cores (Firgure 3).
 
-![tcpreplay CPU usage on one core](reference/tcpreplay_cpu_usage.png)
+![tcpreplay CPU usage on one core](appendix/tcpreplay_cpu_usage.png)
 **Figure 3**
 The left session running the "top" command shows the CPU usage of tcpreplay.
 It is undetermined what results from tcprepaly maxing out the CPU,
@@ -148,8 +160,8 @@ delete.topic.enable = true
 ```
 
 Create the systemd unit files for zookeeper and Kafka.
-Upload [zookeeper.service](templates/zookeeper.service)
-and [kafka.service](templates/kafka.service) to the instance.
+Upload [zookeeper.service](appendix/zookeeper.service)
+and [kafka.service](appendix/kafka.service) to the instance.
 Copy to system directory.
 ```
 sudo cp ../oberljn/zookeeper.service /etc/systemd/system/zookeeper.service
@@ -184,19 +196,23 @@ Such a topic might include timestamped CPU and memory usage stats via a tool lik
 ~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic instance-1-heartbeat
 ```
 
-This Python script [kafka_heartbeat.py](reference/kafka_heartbeat.py)
-is a wrapper arround the Kafka publish command that sends a stats message every N seconds. (Firgure 4)
+This Python script [kafka_heartbeat.py](appendix/kafka_heartbeat.py)
+is a wrapper arround the Kafka publish command that sends a stats message every N seconds (Firgure 4).
 
-![kafka_heartbeat](reference/kafka_heartbeat.png)
+![kafka_heartbeat](appendix/kafka_heartbeat.png)
 **Figure 4**
 
-### Running the traffic simulation, capture, and serving
+### Simulating the traffic, capturing packets, and serving the stream
 It was foud that, to use Kafka, tcpdump is piped to netcat, which pipes to the Kafka producer script for the topic.
 For example, after making a topic "instance-1-pcap", in an instance-1 session,
 sniff network traffic with tcpdump and pipe to port 4444 with netcat.
 ```
 sudo tcpdump -i eth0 -nn -v | netcat localhost 4444
 ```
+
+Here, switch ```-i``` to point tcpdump to the ethernet interface ```eth0```
+, ```-nn``` to disable IP and port name resolution,
+and ```v``` to inrease the verbosity of the output.
 
 In another session, listen on port 4444 with netcat and pipe lines to Kafka.
 ```
@@ -212,7 +228,14 @@ Along with the tcpdump and netcat commands above, tcpreplay is ran on a third se
 sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
 ```
 
-The three commands are wrapped in [server_threads.py](reference/server_threads.py),
+<!-- The ```--netmap``` switch will cause tcpreplay to write to network buffers directly,
+bypassing the network driver if it is detected.
+"This will allow you to achieve full line rates on commodity network adapters,
+similar to rates achieved by commercial" (tcpreplay man page, Debian).
+However tcpreplay responds with "illegal option -- netmap".
+-->
+
+The three commands are wrapped in [server_threads.py](instance-1/server_threads.py),
 which also includes the configuration of the isntance's maximum transmission unit.
 The MTU is the size of the largest protocol data unit that is allowed to be transmitted.
 One can check the data flow on another session with the following.
@@ -221,331 +244,76 @@ Note, this command must run after running server_threads.py, specifically after 
 netcat localhost 4444
 ```
 
-![server_threads.png](reference/server_threads.png)
+![server_threads.png](appendix/server_threads.png)
 **Figure 5**
-Session 1 (left) runs serve_threads.py, which consists of tcpreplay, tcpdump, and netcat.
-Session 2 listens with netcat and shows the streaming packet capture.
+Left session runs serve_threads.py, which consists of tcpreplay, tcpdump, and netcat.
+Right session listens with netcat and shows the streaming packet capture.
 This same stream will be consumed by the Spark cluster.
 
+[^ top](#PCAP-stream-processing)
 
-## Spark cluster
-<!-- ----------------------------- -->
-A Spark program on a cluster
-connects to and consumes the streaming data from instance-1,
-the simulated switch and traffic sniffer. The program's
-primary function is to parse the raw PCAP flow
-using regular expressions to store key traffic data,
-such as timestamp, source IP, destination IP, protocol, packet size, etc.
+## Processing cluster
+The Spark cluster processes the PCAP stream of lines consumed from the network switch, instance-1.
+Its primary transformation is to extract elements from the unstructured stream of lines.
+The cluster could also be used to perform Natural Langauge Processing on the packet,
+in order to classify traffic as an exploit.
 
-See [http_request_dump.txt](reference/http_request_dump.txt) in [reference/](reference/).
-
-
-
-
-
-
-
-
-## Instance 2 setup
-Instance 2 represents the master packet processer
-in the cyber ops environment.
-
-Repeat Kafka install steps as in instance 1 setup.
-
-
-
-## PCAP replay and capture
-Network sniffers, like Wireshark.
-To simulate the network activity and sniffer
-on a network switch,
-instance 1 replays a large PCAP file, simulating the network traffic
-through the switch.
-"The basic operation of tcpreplay is to resend all packets from
-the input file(s) at the speed at which they were recorded,
-or a specified data rate, up to as fast as the hardware is capable"
-(AppNeta).
-The PCAP stream will be published by
-a Kafka topic.
-
-In one session, listen to the interface.
-```
-sudo tcpdump -i eth0 -nn -s0 -v port 80
-sudo tcpdump -i eth0 -nn -c 5
-```
-
-On session 1, filter to a known host.
-```
-sudo tcpdump -i eth0 -nn -v host 192.168.3.131
-```
-
-<!-- This is capturing the SSH traffic, so filter that out,
-but that may filter out network SSH [?] -->
-
-- ```-i``` the interface
-- ```-nn``` to disable IP and port name resolution
-- ```-c``` number of packets
-- ```-l``` number of loops
-- ```-K``` "This option loads the specified pcap(s) into RAM
-before starting to send in order to improve replay performance
-while introducing a startup performance hit."
-- ```--pktlen``` "By specifying this option, tcpreplay will ignore
-the snaplen field and instead try to send packets based
-on the original packet length. Bad things may happen"
-- ```--netmap``` "will detect netmap capable network drivers on Linux
-and BSD systems. If detected, the network driver is bypassed for
-the execution duration, and network buffers will be written to directly.
-This will allow you to achieve full line rates on commodity network adapters,
-similar to rates achieved by commercial"
-
-On session 2, replay a PCAP at speed captured.
-```
-sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
-```
-
-Host 192.168.3.131 is known in smallFlows by:
-```
-sudo tcpdump -v -r smallFlows.pcap > smallFlows.txt
-less smallFlows.txt
-```
-
-If tcpreplay is throwing, and it will for isntance-a, errors that packets are too large,
-increase the MTU setting.
-"the maximum transmission unit (MTU) is the size of the largest
-protocol data unit (PDU) that can be communicated in a
-single network layer transaction.
-The MTU relates to, but is not identical to the maximum frame size
-that can be transported on the data link layer, e.g. Ethernet frame"
-```
-ip link list |grep eth0
-sudo ip link set eth0 mtu 1500
-```
-
-## Replaying CICIDS2017 PCAP
-<!-- CICIDS2017 PCAP file is 8.23 GB,
-and takes forever to transfer to the VM.
-How to do this more efficiently? -->
-
-## Pipe capture to Kafka
-It is suggested to pipe tshark (or tcpdump?) output
-as JSON to netcat on a port, eg here 8888.
-netcat listens on port x and data is piped to Kafka producer script.
-```
-session 1 > nc -l 8888 | ./producer.sh
-session 2 > sudo tshark -l | nc 127.1 8888
-```
-
-Or use a named pipe:
-```
-session 1 > mkfifo tsharkpipe
-session 1 > tail -f -c +0 tsharkpipe | producer.sh
-session 2 > sudo tshark -l > tsharkpipe
-```
-
-## Consume Kafka topics from instance 1
-First, attempt to publish and consume PCAP in Kafka from one instance.
-
-#here
-Make a PCAP topic.
-```
-~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic instance-1-pcap
-```
-
-Is netcat needed? Why not tcpdump piped to Kafka producer?
-
-Connection 1: Listen on port with netcat and pipe to Kafka producer.
-```
-netcat -l -p 4444 | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic instance-1-pcap > /dev/null
-```
-
-Connection 2: Sniff network traffic and pipe to port vi netcat.
-```
-sudo tcpdump -i eth0 -nn -v | netcat localhost 4444
-```
-
-Connection 3: Replay the network traffic
-```
-sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap #here
-```
-
-Connection 4: Consume Kafka topic.
-```
-~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic instance-1-pcap --from-beginning
-
-~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic instance-1-pcap
-```
-
-Make the instance 1 server publicly accessible
-and restrict access to a trusted list of source IP addresses using firewall rules.
-port 9092 open as TCP connection from any IP 0.0.0.0/0.
-Not secure. Better to restrict to a static [?] IP, but the default
-GCP IP is dynamic [?]. Thus, keeping the port open to any IP
-for demonstration purposes.
-It is advised to setup a shared VPC network.
-https://cloud.google.com/vpc/docs/shared-vpc
-
-Compute power may have to be increased on instance-1, as tcpreplay maxes out
-the CPU (97%) even while repalying smallFlows.pcap (9444731B)
-versus Monday-WorkingHours.pcap (10822507416B)
-and Wednesday-WorkingHours.pcap (3420789612B)
-
-Might assumed that not all packets are getting played or packets are delayed, buffered [?]
-
-Or consider this instead, if Kafka in the way.
-
-instance-1, session 1
-```
-sudo tcpdump -i eth0 -nn -vvvv | netcat [cluster-1-m's internal IP*] 4444
-```
-\*Was 10.128.0.4
-
-instance-1, session 2
-```
-sudo tcpreplay -i eth0 -K --loop 1 smallFlows.pcap
-```
-
-Can listen on cluster-1-m and see the PCAP (optional)
-```
-netcat -l -p 4444
-```
-Or write it to a file
-```
-netcat -l -p 4444 > tmp.txt
-```
-
-Was able to wrap the isntance-1 tcpreplay and pipe to netcat in ```python3 server_threads.py```
-But first have master node lsitening ```netcat -l -p 4444```
-
-#here 2020-05-07
-Have Spark consume stream with the normal socket receiver.
-Skipping Kafka for now.
-
-First thing to do is concat every second line,
-but check the tcpdumps -v mode level etc
-Also review tcpreplay's settings. Is it replaying
-everythin possible?
-Which also reminds me, tcpreplay needs better CPU.
-
-
-## Packet analytics
-The Storm or Spark cluster consumes the Kafka PCAP topic
-in order to parse, filter, reduce, analyze, and model packet capture.
-<!-- Python's Scapy [?]
-Or consider Spark Streaming socket input for RDD, instead of Storm
-read up on Storm rolling window
--->
-
-Create cluster for Spark. Master and two workers:
+### Configuration
+Enable the Cloud Dataproc API and create a cluster for Spark with the GCP [Dataproc](https://console.cloud.google.com/dataproc/).
+A master node and two worker nodes. Each consists of four CPUs, 15 GB memory. The workers include a YARN NodeManager and an HDFS DataNode.
 - cluster-1-m
 - cluster-1-w-0
 - cluster-1-w-1
 
-Create a cluster for Spark with Dataproc
-
-https://console.cloud.google.com/dataproc/clusters?project=user0112358d
-
-Cloud Dataproc API has been enabled
-
-APIs Explorer Quickstart—Create a cluster
-"clusterName": "cluster-1",
-"clusterUuid": "b8ae0245-a98b-4b04-a388-2ab51a503b16",
-
-1 master node, two workers
-
-Worker nodes
-Each contains a YARN NodeManager and a HDFS DataNode.
-
-see https://www.quora.com/What-is-the-best-hardware-configuration-to-run-Hadoop
-
-
-Configure master
+#### Installs
+Install pip and pyspark.
 ```
 sudo apt-get install python3-pip
 pip3 install pyspark
 ```
 
-https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#quick-example
+Repeat Kafka install and configuration steps as in instance-1 configuration, for eventual Kafka implementation.
 
+### Check connection to and view stream from instance-1
+Run the following on cluster-1-m *after* running server_threads.py on instance-1:
 ```
-/home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit test_spark.py localhost 6969
-```
-
-See spark code test_spark.py. Run Spark code like this:
-```
-/home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit test_spark.py 10.150.0.6 4444
+netcat 10.150.0.6 4444
 ```
 
-But first (or second...) on instance-1 run:
+![netcat_check.png](appendix/netcat_check.png)
+**Figure 6**
+*Left session on instance-1 runs server_threads, whihc includes the tcpreplay, tcpdump, and netcat on port 4444.
+Right session on cluster-1-m connects to instance-1 with netcat and dumps the PCAP stream.*
+
+### PCAP parsing
+A Spark streaming program consumes the stream with the socket receiver.
+It uses regular expressions to parse key packet data,
+such as timestamp, source IP, destination IP, protocol, packet size, etc.
+An example of raw PCAP data can be seen here, [http_request_dump.txt](appendix/http_request_dump.txt),
+which is a single HTTP request to www.example.com.
+
+For reference, the first attempt with Kafka was made with [spark_kafka_FAIL.py](cluster-1-m/spark_kafka_FAIL.py),
+which requires more time for troubleshooting.
+[spark_process.py](cluster-1-m/spark_process.py) was written using the Spark socket receiver instead of the Kafka utility.
+
+
+After the following Spark stream starts up, run ```python3 server_threads.py``` on instance-1
+or test with ```netcat -l 4444``` and type some text.
 ```
-python3 server_threads.py
-```
-
-Spark code must include first off:
-```
-import os
-x = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 pyspark-shell'
-os.environ['PYSPARK_SUBMIT_ARGS'] = x
-
-
-from pyspark import SparkContext
-from pyspark.streaming import StreamingContext
-from pyspark.streaming.kafka import KafkaUtils
-
-# Set up the Spark context and the streaming context
-sc = SparkContext(appName="PCAP test")
-sc.setLogLevel("WARN")
-
-ssc = StreamingContext(sc, .01)
-
-kafkaStream = KafkaUtils.createStream(ssc,
-        '10.150.0.6:9092',
-        'spark-streaming',
-        {'instance-1-pcap':1})
-
-kafkaStream.pprint()
-#import re
-#parsed = kafkaStream.map(lambda line: re.compile())
-
-ssc.start()
-sleep(5)
-ssc.stop(stopSparkContext=True, stopGraceFully=True)
+/home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit spark_process.py 10.150.0.6 4444
 ```
 
+#here
 
-### to do: #here
-- Get kafka connector to pyspark streaming df
-- Do a transformation
-- then run that pyspark file as a job in browser dataproc page
 
-Packet extract namespace:
-- number [?]
-- time
-- source
-- destination
-- protocol
-- length
-- flag
-
-Create a file for parsing development and testing.
-```
-session 1 $ sudo tcpdump -i eth0 -nn -c 5 -vvvv > tmp.txt
-session 2 $ sudo tcpreplay -i eth0 -tK --loop 3 smallFlows.pcap
-```
-
-See packet parse namespace and regular expressions at [packet_parse.json](packet_parse.json).
-See Python packet parse code at [packet_parse.py](packet_parse.py)
+[^ top](#PCAP-stream-processing)
 
 ## Storage
-PCAP data and KPIs from Storm processes are
-stored in a Cassandra database on Hadoop.
-Cassandra has been chosen due to the need
-for high availability in an environment like cyber ops.
-Cassandra has multiple master nodes that can continue to run
-the DB if one goes down <!--#cite-->.
-Whereas MongoDB has one master node in a cluster that,
-if it goes down, is not replaced until after 10 to 30 seconds <!--#cite-->.
-During the replacement process, the cluster cannot
-take input.
-
+PCAP data is stored in a Cassandra database on Hadoop.
+Cassandra has been chosen due to the need for high availability in an environment like cyber ops.
+Cassandra has multiple master nodes that can continue to run the DB if one goes down <!--#cite-->.
+Whereas MongoDB has one master node in a cluster that, if it goes down, is not replaced until after 10 to 30 seconds <!--#cite-->.
+During the replacement process, the cluster cannot take input.
 <!--
 As data types must be defined in Cassandra, and MOngoDB is scheemaless,
 PCAP variables should be known beforehand.
@@ -553,138 +321,49 @@ No need for scheemaless essentially.
 Query language or CQL is very similar to SQL, so analysts should be
 at ease with ad-hoc queries on Cassandra.
 -->
+Provides ad-hoc reporting via Cassandra's query language CQL.
 
-## Ad hoc reporting
-Cassandra's query language CQL.
+### Configuration
+Cassandra (Google Click to Deploy)
+https://console.cloud.google.com/marketplace/details/click-to-deploy-images/cassandra
+
+2 CPUs and 8 MB memory for testing purposes.
+
+Data disk size: 50 GB
+- [x] Allow TCP port 7000-7001 traffic between VMs in this group
+- [x] Allow TCP port 7199 traffic between VMs in this group
+
+
+
+Add to spark-submit command.
+```
+spark-submit \
+	--packages anguenot/pyspark-cassandra:<version> \
+	--conf spark.cassandra.connection.host=your,cassandra,node,names
+```
+
+"The primary representation of CQL rows in PySpark Cassandra is the ROW format. However sc.cassandraTable(...) supports the row_format argument which can be any of the constants from RowFormat: DICT: The default layout, a CQL row is represented as a python dict with the CQL row columns as keys."
+ref: github anguenot / pyspark-cassandra
+
+[^ top](#PCAP-stream-processing)
 
 ## Cyber ops dashboard
 D3.js <!--best for real-time?-->. Open source, web standards, mobile version
 
-## References and resources
-- Packet capture (pcap) is a performant C++ probe that captures network packets and
-streams them into Kafka. A pcap Storm topology then streams them into Cloudera
-Cybersecurity Platform (CCP)
-https://docs.cloudera.com/ccp/2.0.1/add-new-telemetry-data-source/topics/ccp-pcap.html
-- Stream Processing vs. Continuous PCAP: The Big Shift in
-https://www.extrahop.com/company/blog/2016/stream-processing-vs-continuous-pcap-the-big-shift-in-network-monitoring-architectures/
-- Radford. Network Traffic Anomaly Detection Using Recurrent Neural Networks.
-28 Mar 2018.
-url: https://arxiv.org/pdf/1803.10769.pdf
--
-- Iman Sharafaldin, Arash Habibi Lashkari, and Ali A. Ghorbani.
-"Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization".
-4th International Conference on Information Systems Security and Privacy (ICISSP),
-Portugal, January 2018.
-- https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-debian-9
-- https://cloudwafer.com/blog/installing-apache-kafka-on-debian-9/
-- Python kafka
-- https://opensource.com/article/18/10/introduction-tcpdump
-- AppNeta http://tcpreplay.appneta.com/wiki/tcpreplay-man.html
-- ref: Protocol Numbers
-https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
-- ref: Description of the Internet Protocol, IP
-https://www.eit.lth.se/ppplab/IPHeader.htm
-- ref: pcaptools
-https://github.com/caesar0301/awesome-pcaptools
-- https://alvinalexander.com/linux-unix/linux-processor-cpu-memory-information-commands/
-- smallFlows.pcap
-https://tcpreplay.appneta.com/wiki/captures.html
-- Datasets http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/
-GeneratedLabelledFlows.zip
-This is already processed PCAPs and its resolution is only minutes.
-- http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/PCAPs/
-Friday-WorkingHours.pcap (http://205.174.165.80/CICDataset/CIC-IDS-2017/Dataset/PCAPs/Friday-WorkingHours.pcap)
-- Protocol numbers
-https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xml
-
-## Useful snippets
-System info.
-```
-top
-cat /proc/cpuinfo
-cat /proc/meminfo
-free -m
-```
-
-Interface info.
-```
-ip link show
-```
-
-## Pyspark client
-```
-from pyspark import SparkConf, SparkContext
-from pyspark.streaming import StreamingContext
-
-def datastream():
-    conf = SparkConf()
-    conf.setAppName('TwitterStreamApp')
-
-    sc = SparkContext(conf=conf)
-    sc.setLogLevel('ERROR')
-
-    ssc = StreamingContext(sc, 2) # interval size 2 seconds
-
-    # setting a checkpoint to allow RDD recovery [?]
-    ssc.checkpoint('checkpoint_TwitterApp')
-
-    # read data from port 9009
-    datastream = ssc.socketTextStream('localhost', 9009)
-
-    return datastream
-```
-
-## Wrapping the traffic simulator and Kafka pub/sub
-Saves from opening 4-5 sessions to instance-1.
-Code to run the traffic simulator and sniffer. Maybe separate these out,
-as they're different concepts.
-
-Not tested
-
-```
-import subprocess
-import threading
-netcat_port = 8888
-kafka_port = 9092
-pcap_file = 'smallFlows.pcap'
-def netcat_to_kafka(netcat_port, kafka_port):
-    '''
-    Pipe netcat to Kafka producer
-    '''
-    cmd = 'netcat -l -p {} | ~/kafka/bin/kafka-console-producer.sh \
---broker-list localhost:{} \
---topic instance-1-pcap > /dev/null'.format(netcat_port, kafka_port)
-    subprocess.run(cmd)
-
-def tcpdump_to_netcat(netcat_port):
-    '''
-    Sniff traffic on interface and pipe to netcat
-    '''
-
-    cmd = 'sudo tcpdump -i eth0 -nn -vvvv | \
-netcat localhost -p {}'.format(netcat_port)
-
-    subprocess.run(cmd)
-
-
-def tcpreplay(pcap_file):
-    '''
-    Simulate network traffic on the interface with tcpreplay
-    '''
-
-    cmd = 'sudo tcpreplay -i eth0 -K --loop 1 {}'.format(pcap_file)
-
-    subprocess.run(cmd)
-
-```
 [^ top](#PCAP-stream-processing)
 
 ## Sources
 - Iman Sharafaldin, Arash Habibi Lashkari, and Ali A. Ghorbani.
 Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization.
 4th International Conference on Information Systems Security and Privacy (ICISSP), Portugal, January 2018
+
 - Resizing the file system and partitions on a zonal persistent disk. Google Cloud.
-url: https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions
-- tcpreplay man page. AppNeta.
-url: [http://tcpreplay.appneta.com/wiki/tcpreplay-man.html](http://tcpreplay.appneta.com/wiki/tcpreplay-man.html)
+url: [https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions](https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions)
+
+- Structured Streaming Programming Guide. Apache Spark.
+url: [https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
+
+- tcpreplay man page. Debian.
+url: [https://manpages.debian.org/unstable/tcpreplay/tcpreplay.1.en.html](https://manpages.debian.org/unstable/tcpreplay/tcpreplay.1.en.html)
+
 [^ top](#PCAP-stream-processing)
