@@ -19,7 +19,7 @@ However, PCAP is only one data source mong several streaming sources
 that can enrich cyber operations analyses.
 A full implementation would include data streams via Kafka topics from sources such as log files and help desk tickets.
 
-![Packet bytes per second](appendix/flow_bytes_per_sec.png)
+![bytes_per_sec.png](appendix/bytes_per_sec.png)
 **Figure 1**:
 *Packet bytes per second from an analysis of the CICDataset's Labelled Flows
 (Sharafaldin, Lashkari, and Ghorbani, 2018).
