@@ -298,13 +298,17 @@ which requires more time for troubleshooting.
 
 
 After the following Spark stream starts up, run ```python3 server_threads.py``` on instance-1
-or test with ```netcat -l 4444``` and type some text.
+or test with ```netcat -l 4444``` and type some text. (Figure 7)
 ```
 /home/oberljn/.local/lib/python3.5/site-packages/pyspark/bin/spark-submit spark_process.py 10.150.0.6 4444
 ```
 
-#here
-
+![spark_processing.png](appendix/spark_processing.png)
+**Figure 7**
+Left session, instance-1 runs serves tcpdump on port 4444.
+Right session, cluster-1-m processed the packets into data elements:
+source IP, destination IP, packet length (size), and timestamp.
+The code also includes an error capture.
 
 [^ top](#PCAP-stream-processing)
 
