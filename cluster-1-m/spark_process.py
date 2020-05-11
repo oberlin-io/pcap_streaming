@@ -13,7 +13,7 @@ ssc = StreamingContext(sc, 1) # batch interval of N second
 #sqlContext = SQLContext(sc)
 
 # Adding open bracket to the json output file.
-# Need to manually add the closing bracket
+# Need to manually add the closing bracket, and delete trailing comma ','
 with open('parsed.json', 'w') as f: f.write('[\n')
 
 
@@ -42,12 +42,15 @@ def write(rdd):
     if not rdd.isEmpty():
         jrdd = rdd.map(json.dumps)
         jstr = jrdd.reduce(lambda x, y: x + ",\n" + y)
+        jstr += ',\n'
         with open("parsed.json", "a") as f:
             f.write(jstr.encode("utf-8"))
 
 values.foreachRDD(write)
-with open("parsed.json", "a") as f:
-    f.write(',\n')
+
+# #bug each foreach RDD write should end with a ',' 
+#with open("parsed.json", "a") as f:
+#    f.write(',\n')
 
 
 ssc.start()
