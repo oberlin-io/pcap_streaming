@@ -50,3 +50,29 @@ class PacketParse(object):
             d[field['name']] = value
 
         return d
+
+    
+    def get_values_aslist(self, line):
+        '''
+        Run on each line of datastream, assuming each line is a packet.
+        '''
+
+        regex = self.regex
+        #d = dict()
+        #d['errors'] = list()
+        d = list()
+
+        for field in regex:
+            #print(field['name'])
+            try:
+                dx = regex.index(field)
+                value = field['compiled'].search(line).group(1)
+            except Exception as e:
+                value = None
+                #d['errors'].append({field['name']: str(e)})
+            
+            #d[field['name']] = value
+            d.append(value)
+
+        return d
+
