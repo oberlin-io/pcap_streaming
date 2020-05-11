@@ -37,17 +37,6 @@ values = strm.map(p_parse.get_values)
 
 values.pprint()
 
-'''
-def write(rdd):
-    if not rdd.isEmpty():
-        #rdd.toDF().write.save("parsed.json", format="json", mode="append") 
-        #with open('parsed.json', 'a') as f:
-        #    f.write(rdd.encode('utf-8'))
-        rdd.saveAsTextFile('parsed.txt', )
-values.foreachRDD(write)
-'''
-
-
 import json
 def write(rdd):
     if not rdd.isEmpty():
@@ -57,6 +46,8 @@ def write(rdd):
             f.write(jstr.encode("utf-8"))
 
 values.foreachRDD(write)
+with open("parsed.json", "a") as f:
+    f.write(',\n')
 
 
 ssc.start()
