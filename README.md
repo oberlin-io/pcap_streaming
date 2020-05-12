@@ -312,12 +312,16 @@ The code also includes an error capture.
 
 [^ top](#PCAP-stream-processing)
 
+
 ## Storage
-PCAP data is stored in a Cassandra database on Hadoop.
+For further development, processed PCAP data will be stored in a Cassandra database on Hadoop.
 Cassandra has been chosen due to the need for high availability in an environment like cyber ops.
-Cassandra has multiple master nodes that can continue to run the DB if one goes down <!--#cite-->.
-Whereas MongoDB has one master node in a cluster that, if it goes down, is not replaced until after 10 to 30 seconds <!--#cite-->.
+Cassandra has multiple master nodes that can continue to run the DB if one goes down
+Whereas MongoDB has one master node in a cluster that, if it goes down, is not replaced until after 10 to 30 seconds
 During the replacement process, the cluster cannot take input.
+Additionally, Cassandra provides ad-hoc reporting via query language CQL, which would be familiar to SQL users.
+However, MongoDB's JSON document open scheema may be ideal considering the dictionary data structure used in the Spark processing.
+
 <!--
 As data types must be defined in Cassandra, and MOngoDB is scheemaless,
 PCAP variables should be known beforehand.
@@ -325,7 +329,6 @@ No need for scheemaless essentially.
 Query language or CQL is very similar to SQL, so analysts should be
 at ease with ad-hoc queries on Cassandra.
 -->
-Provides ad-hoc reporting via Cassandra's query language CQL.
 
 ### Configuration
 Cassandra (Google Click to Deploy)
@@ -337,8 +340,6 @@ Data disk size: 50 GB
 - [x] Allow TCP port 7000-7001 traffic between VMs in this group
 - [x] Allow TCP port 7199 traffic between VMs in this group
 
-
-
 Add to spark-submit command.
 ```
 spark-submit \
@@ -346,27 +347,16 @@ spark-submit \
 	--conf spark.cassandra.connection.host=your,cassandra,node,names
 ```
 
-"The primary representation of CQL rows in PySpark Cassandra is the ROW format. However sc.cassandraTable(...) supports the row_format argument which can be any of the constants from RowFormat: DICT: The default layout, a CQL row is represented as a python dict with the CQL row columns as keys."
-ref: github anguenot / pyspark-cassandra
-
-[^ top](#PCAP-stream-processing)
-
-## Cyber ops dashboard
-D3.js <!--best for real-time?-->. Open source, web standards, mobile version
-
 [^ top](#PCAP-stream-processing)
 
 ## Sources
 - Iman Sharafaldin, Arash Habibi Lashkari, and Ali A. Ghorbani.
 Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization.
 4th International Conference on Information Systems Security and Privacy (ICISSP), Portugal, January 2018
-
 - Resizing the file system and partitions on a zonal persistent disk. Google Cloud.
 url: [https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions](https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=en_US&_ga=2.94629659.-684521909.1584918365#resize_partitions)
-
 - Structured Streaming Programming Guide. Apache Spark.
 url: [https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
-
 - tcpreplay man page. Debian.
 url: [https://manpages.debian.org/unstable/tcpreplay/tcpreplay.1.en.html](https://manpages.debian.org/unstable/tcpreplay/tcpreplay.1.en.html)
 
